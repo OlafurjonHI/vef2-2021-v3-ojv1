@@ -100,6 +100,7 @@ const sanitizationMiddleware = [
 ];
 
 async function validationCheck(req, res, next) {
+  const { page = 1 } = req.query;
   const {
     name, nationalId, comment, anonymous,
   } = req.body;
@@ -107,12 +108,12 @@ async function validationCheck(req, res, next) {
   const formData = {
     name, nationalId, comment, anonymous,
   };
-  const registrations = await list();
 
+  const { registrations, result } = await getList(page, 50, '/');
   const validation = validationResult(req);
 
   if (!validation.isEmpty()) {
-    return res.render('index', { formData, errors: validation.errors, registrations });
+    return res.render('index', { formData, errors: validation.errors, registrations,result });
   }
 
   return next();
