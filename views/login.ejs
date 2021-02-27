@@ -1,9 +1,9 @@
 <%- include('header') -%>
 
 <h1>Innskráning</h1>
-<form method="post" action="./login">
-    <label>Notendanafn: <input type="text" name="username"></label>
-    <label>Lykilorð: <input type="password" name="password"></label>
+<form class="login__form" method="post" action="./login">
+    <label for="username">Notendanafn: </label><input type="text" name="username" id="username" required>
+    <label for="password">Lykilorð: </label><input type="password" name="password" id="password" required>
     <% if (message) { %>
         <p><%= message  %> </p>
        <% } %>
