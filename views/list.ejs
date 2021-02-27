@@ -1,0 +1,57 @@
+
+<section class="registrations">
+  <h2 class="registrations__title">Undirskriftir</h2>
+  
+  <% if (registrations.length === 0) { %>
+    <p class="registrations__empty">Engar undirskriftir.</p>
+  <% } else { %>
+    <span class="registrations__total">Fjöldi undirskrifta: <%= result.totalsig %> </span>
+    <table class="registrations__table" cellpadding="0">
+      <tr>
+        <th>Dags</th>
+        <th>Nafn</th>
+        <th>Athugasemd</th>
+        <% if (user != null) { %>
+          <th>Eyða</th>
+        <% } %>
+      </tr>
+      <% registrations.forEach((row) => { %>
+        <tr>
+          <td class="date"><%= formatDate(row.signed) %></td>
+          <td class="name"><%= row.anonymous ? 'Nafnlaust' : row.name %></td>
+          <td class="comment"><%= row.comment %></td>
+          <% if (user) { %>
+            <td class="comment">
+              <form class="admin__form" method="POST" action="/admin/delete">
+                <button name="nationalId" value="<%=row.nationalid %>" type="submit">Eyða</button>
+              </form>
+            </td>
+          <% } %>
+        </tr>
+      <% }) %>
+      </tr>
+    </table>
+    <% if (result.pages > 1) { %>
+      <div class="registrations__pages">
+        <% if (result._links.prev) { %>
+          <a href="<%= result._links.prev.href%>">Fyrri síða</a>
+        <% } else {%>
+          <span>Fyrri síða</span>
+          <% } %>
+        <div>
+          <span>Síða</span>
+          <span><%= parseInt(result.page) %> </span>
+          <span>af</span>
+          <span><%= parseInt(result.pages) %> </span>
+        </div>
+        <% if (result._links.next) { %>
+          <a href="<%= result._links.next.href %>">Næsta síða</a>
+        <% } else {%>
+          <span>Næsta síða</span>
+          <% } %>
+    
+      </div>
+    <% } %>
+
+  <% } %>
+</section>

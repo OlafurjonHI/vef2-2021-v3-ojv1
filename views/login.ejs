@@ -1,0 +1,16 @@
+<%- include('header') -%>
+
+<h1>Innskráning</h1>
+<form method="post" action="./login">
+    <label>Notendanafn: <input type="text" name="username"></label>
+    <label>Lykilorð: <input type="password" name="password"></label>
+    <% if (message) { %>
+        <p><%= message  %> </p>
+       <% } %>
+     
+    <button>Innskrá</button>
+  </form>
+
+<a href="/">Til baka</a>
+
+<%- include('footer') -%>
