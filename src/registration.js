@@ -113,7 +113,9 @@ async function validationCheck(req, res, next) {
   const validation = validationResult(req);
 
   if (!validation.isEmpty()) {
-    return res.render('index', { formData, errors: validation.errors, registrations,result });
+    return res.render('index', {
+      formData, errors: validation.errors, registrations, result,
+    });
   }
 
   return next();
