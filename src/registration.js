@@ -17,11 +17,11 @@ export const router = express.Router();
 function catchErrors(fn) {
   return (req, res, next) => fn(req, res, next).catch(next);
 }
+const modulo = (a, n) => ((a % n) + n) % n;
 export const getList = async (offset, limit, url) => {
   let page = offset;
-  const totalsig = await total();
-
-  const maxPages = (totalsig / limit) + 1;
+  const totalsig = parseInt(await total(), 10);
+  const maxPages = (modulo(totalsig, limit) === 0) ? (totalsig / limit) : (totalsig / limit) + 1;
   page = Math.round(page);
   const registrations = await list(page, limit);
   const result = {
