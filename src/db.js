@@ -97,14 +97,40 @@ export async function total() {
   return count;
 }
 
+export async function insertFakeData({
+  name, nationalId, comment, anonymous, signed,
+} = {}) {
+  let success = true;
+
+  const q = `
+    INSERT INTO signatures
+      (name, nationalId, comment, anonymous,signed)
+    VALUES
+      ($1, $2, $3, $4, $5);
+  `;
+  const values = [name, nationalId, comment, anonymous === 'on', signed];
+
+  try {
+    await query(q, values);
+  } catch (e) {
+    console.error('Error inserting signature', e);
+    success = false;
+  }
+
+  return success;
+}
+
 export async function fakeData(N) {
+  const now = new Date();
+  const then = new Date(Date.now() - (2 * 6.048e+8));
   for (let index = 0; index < N; index += 1) {
     const entry = {};
     entry.name = faker.name.findName();
     entry.nationalId = randomKennitala();
     entry.comment = (faker.random.boolean()) ? '' : faker.lorem.sentence();
     entry.anonymous = (faker.random.boolean()) ? 'on' : 'checked';
-    insert(entry);
+    entry.signed = faker.date.between(then, now);
+    insertFakeData(entry);
   }
 }
 
@@ -116,7 +142,7 @@ export async function fakeData(N) {
 export async function list(offset = 0, limit = 50) {
   offset = parseInt(offset - 1, 10);
   if (offset < 0) offset = 0;
-
+  offset = (offset === 0) ? 0 * limit : offset * limit;
   let result = [];
   try {
     const q = 'SELECT name, nationalId, comment, anonymous, signed FROM signatures ORDER BY signed DESC OFFSET $1 LIMIT $2';

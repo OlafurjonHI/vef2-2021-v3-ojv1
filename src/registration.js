@@ -17,13 +17,12 @@ export const router = express.Router();
 function catchErrors(fn) {
   return (req, res, next) => fn(req, res, next).catch(next);
 }
-
+const modulo = (a, n) => ((a % n) + n) % n;
 export const getList = async (offset, limit, url) => {
   let page = offset;
   const totalsig = await total();
-  let maxPages = totalsig / limit;
-  if (page > maxPages) page = maxPages;
-  if (maxPages < 1) maxPages = 1;
+
+  const maxPages = (totalsig / limit) + 1;
   page = Math.round(page);
   const registrations = await list(page, limit);
   const result = {
@@ -44,7 +43,7 @@ export const getList = async (offset, limit, url) => {
     };
   }
 
-  if (page < maxPages) {
+  if (page + 1 < maxPages) {
     result._links.next = {
       href: `${url}?page=${Number(page) + 1}`,
     };
