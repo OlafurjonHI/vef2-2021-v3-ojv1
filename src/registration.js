@@ -17,7 +17,6 @@ export const router = express.Router();
 function catchErrors(fn) {
   return (req, res, next) => fn(req, res, next).catch(next);
 }
-const modulo = (a, n) => ((a % n) + n) % n;
 export const getList = async (offset, limit, url) => {
   let page = offset;
   const totalsig = await total();
